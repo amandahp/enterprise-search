@@ -1,19 +1,17 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-
-import { ThemeProvider } from 'styled-components'
+import { Provider } from 'react-redux'
+import { PersistGate } from 'redux-persist/integration/react'
 
 import App from './App'
 
-import themeOne from './theme/themeOne'
-
-import GlobalStyles from './globalStyles'
+import { store, persistor } from './store/initializeStore'
 
 ReactDOM.render(
-  <ThemeProvider theme={themeOne}>
-    <GlobalStyles />
-    <App />
-  </ThemeProvider>,
-
+  <Provider store={store}>
+    <PersistGate persistor={persistor}>
+      <App />
+    </PersistGate>
+  </Provider>,
   document.getElementById('root')
 )

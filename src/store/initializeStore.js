@@ -1,13 +1,28 @@
-import { createStore, applyMiddleware } from 'redux'
+import { createStore, applyMiddleware, Store } from 'redux'
 import createSagaMiddleware from 'redux-saga'
+import { persistStore, persistReducer } from 'redux-persist'
+import storage from 'redux-persist/lib/storage'
+import { composeWithDevTools } from 'redux-devtools-extension'
 
-import rootReducer from 'store/ducks/rootReducers'
-import rootSaga from 'store/ducks/rootSaga'
+import rootReducer from './ducks/rootReducer'
+import rootSaga from './ducks/rootSaga'
 
 const sagaMiddleware = createSagaMiddleware()
 
-const store = createStore(rootReducer, applyMiddleware(sagaMiddleware))
+const persistConfig = {
+  key: 'root',
+  storage,
+  whitelist: ['auth']
+}
+
+const persistedReducer = persistReducer(persistConfig, rootReducer)
+
+const store = createStore(
+  persistedReducer,
+  composeWithDevTools(applyMiddleware(sagaMiddleware))
+)
+const persistor = persistStore(store)
 
 sagaMiddleware.run(rootSaga)
 
-export default store
+export { store, persistor }
