@@ -1,5 +1,4 @@
 export { Home } from './Home'
 export { Login } from './Login'
-export { Search } from './Search'
 export { NotFound } from './NotFound'
 export { Registration } from './Resgistration'

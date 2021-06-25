@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { Typography, Select, MenuItem, Box } from '@material-ui/core'
+import { revenueValues } from '../../utils/revenueValues'
 
 import { useStyles } from './card-header.styles'
 
@@ -9,7 +10,6 @@ export const CardHeader = (props) => {
 
   const {
     title = '',
-    selectOptions = [],
     handleChangeSelect = () => {},
     selectedValue,
     showInput = false
@@ -27,9 +27,9 @@ export const CardHeader = (props) => {
                 autoWidth
                 className={classes.select}
                 value={selectedValue}
-                onChange={() => handleChangeSelect()}
+                onChange={(event) => handleChangeSelect(event.target.value)}
               >
-                {selectOptions.map((options, index) => {
+                {revenueValues.map((options, index) => {
                   return (
                     <MenuItem key={index + options.label} value={options.value}>
                       <Typography variant="h6">{options.label}</Typography>

@@ -17,7 +17,7 @@ export const useStyles = makeStyles((theme) =>
       maxHeight: '36px',
       padding: theme.spacing(2.5, 4),
       fontWeight: 600,
-      color: theme.palette.common.white,
+      color: theme.palette.background.paper,
       backgroundColor: theme.palette.primary.light
     }
   })

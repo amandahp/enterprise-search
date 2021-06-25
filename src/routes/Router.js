@@ -1,12 +1,11 @@
 import React from 'react'
 
-import { Home, Login, Search, Registration, NotFound } from '../pages'
+import { Home, Login, Registration, NotFound } from '../pages'
 import { PublicRoute } from './publicRoutes'
 import { PrivateRoute } from './privateRoutes'
 
 const routes = [
   { path: '/home', component: Home, private: true },
-  { path: '/search', component: Search, private: true },
   { path: '/registration', component: Registration, private: true },
   { path: '/login', component: Login, private: false },
   { path: '*', component: NotFound, private: true }

@@ -1,16 +1,38 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
+import { useDispatch, useSelector } from 'react-redux'
+import { login } from '../../store/ducks/auth/actions'
+import { useHistory } from 'react-router-dom'
 
-import { Box, TextField, Button } from '@material-ui/core'
+import { Box, TextField, Button, CircularProgress } from '@material-ui/core'
 
 import { useStyles } from './form-login.styles'
 
 export const FormLogin = () => {
+  const history = useHistory()
+  const token = useSelector((state) => state.loginReducer.token)
+  const loading = useSelector((state) => state.loginReducer.loading)
+
+  console.log(loading)
+  const dispatch = useDispatch()
   const classes = useStyles()
 
-  const { control, handleSubmit } = useForm()
+  useEffect(() => {
+    if (token) {
+      history.push('/home')
+    }
+  }, [token, history])
+
+  const { control, handleSubmit } = useForm({
+    defaultValues: {
+      email: '',
+      password: ''
+    }
+  })
 
   const onSubmit = (data) => {
+    const { email, password } = data
+    dispatch(login(email, password))
     console.log(data)
   }
 
@@ -39,6 +61,7 @@ export const FormLogin = () => {
           control={control}
           render={({ field: { onChange, value } }) => (
             <TextField
+              type="password"
               variant="outlined"
               fullWidth
               id="password"
@@ -51,9 +74,17 @@ export const FormLogin = () => {
         />
 
         <Box flexDirection="row" justifyContent="flex-end">
-          <Button className={classes.button} variant="contained" type="submit">
-            Entrar
-          </Button>
+          {!loading ? (
+            <Button
+              className={classes.button}
+              variant="contained"
+              type="submit"
+            >
+              Entrar
+            </Button>
+          ) : (
+            <CircularProgress />
+          )}
         </Box>
       </form>
     </Box>

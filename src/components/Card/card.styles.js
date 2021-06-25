@@ -3,7 +3,8 @@ import { createStyles, makeStyles } from '@material-ui/core/styles'
 export const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
-      maxWidth: 345
+      maxWidth: 345,
+      minWidth: 300
     },
     media: {
       height: 140
@@ -18,6 +19,10 @@ export const useStyles = makeStyles((theme) =>
         justifyContent: 'center',
         marginTop: theme.spacing(21.25)
       }
+    },
+    mainGrid: {
+      display: 'flex',
+      justifyContent: 'center'
     }
   })
 )

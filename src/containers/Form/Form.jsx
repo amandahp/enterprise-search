@@ -1,6 +1,12 @@
-import React, { useCallback } from 'react'
+import React, { useState, useCallback } from 'react'
+
+import { useDispatch, useSelector } from 'react-redux'
+import { insertEnterprise } from '../../store/ducks/enterprise/actions'
 
 import { Controller, useForm } from 'react-hook-form'
+import { revenueValues } from '../../utils/revenueValues'
+import { CircularProgress } from '@material-ui/core'
+
 import { useHistory } from 'react-router'
 
 import {
@@ -10,19 +16,37 @@ import {
   TextField,
   Button,
   InputLabel,
-  FormControl
+  FormControl,
+  MenuItem,
+  Typography
 } from '@material-ui/core'
 
 import { useStyles } from './form.styles'
 
-export const Form = (props) => {
-  const { control, handleSubmit } = useForm()
-  const { sacValues } = props
+export const Form = () => {
+  const dispatch = useDispatch()
+
+  const loading = useSelector((state) => state.enterpriseReducer.loading)
+  const [randomKey, setRandomKey] = useState(Math.random())
+
+  const { control, handleSubmit, reset } = useForm({
+    defaultValues: {
+      name: '',
+      cnpj: '',
+      value: '',
+      desc: ''
+    }
+  })
+
   const classes = useStyles()
   const history = useHistory()
 
+  console.log(loading, ' loadinggg')
+
   const onSubmit = (data) => {
-    console.log(data)
+    dispatch(insertEnterprise(data))
+    setRandomKey(Math.random())
+    reset()
   }
 
   const handleRedirect = useCallback(() => {
@@ -31,12 +55,12 @@ export const Form = (props) => {
 
   return (
     <>
-      <Box alignItems="center" marginTop="30px">
+      <Box key={randomKey} alignItems="center" marginTop="30px">
         <form className={classes.Modal} onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={2}>
             <Grid item xs={12} xl={12} lg={12}>
               <Controller
-                name="nome da empresa"
+                name="name"
                 control={control}
                 render={({ field: { onChange, value } }) => (
                   <TextField
@@ -74,7 +98,7 @@ export const Form = (props) => {
           <Grid container spacing={2}>
             <Grid item xs={12} xl={12} lg={12}>
               <Controller
-                name="demanda"
+                name="value"
                 control={control}
                 render={({ field: { onChange, value } }) => (
                   <TextField
@@ -93,7 +117,7 @@ export const Form = (props) => {
           <Grid container spacing={2}>
             <Grid item xs={12} xl={12} lg={12}>
               <Controller
-                name="product"
+                name="anualFat"
                 control={control}
                 render={({ field: { onChange, value } }) => (
                   <>
@@ -108,7 +132,20 @@ export const Form = (props) => {
                         label="Faturamento Anual"
                         value={value}
                         onChange={onChange}
-                      />
+                      >
+                        {revenueValues.map((options, index) => {
+                          return (
+                            <MenuItem
+                              key={index + options.label}
+                              value={options.value}
+                            >
+                              <Typography variant="h6">
+                                {options.label}
+                              </Typography>
+                            </MenuItem>
+                          )
+                        })}
+                      </Select>
                     </FormControl>
                   </>
                 )}
@@ -118,7 +155,7 @@ export const Form = (props) => {
           <Grid container spacing={2}>
             <Grid item xs={12} xl={12} lg={12}>
               <Controller
-                name="sobre"
+                name="desc"
                 control={control}
                 render={({ field: { onChange, value } }) => (
                   <TextField
@@ -146,14 +183,18 @@ export const Form = (props) => {
             >
               Cancelar
             </Button>
-            <Button
-              className={classes.submitButton}
-              type="submit"
-              variant="contained"
-              disableElevation
-            >
-              Cadastrar Empresa
-            </Button>
+            {!loading ? (
+              <Button
+                className={classes.submitButton}
+                type="submit"
+                variant="contained"
+                disableElevation
+              >
+                Cadastrar Empresa
+              </Button>
+            ) : (
+              <CircularProgress />
+            )}
           </Box>
         </form>
       </Box>
